@@ -1,0 +1,2350 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "description": "Fetch a list of patients based on given, family, and dob.",
+      "query_params": {
+        "token": {
+          "required": true,
+          "description": "Authentication token"
+        },
+        "given": {
+          "required": false,
+          "description": "Patient's given name"
+        },
+        "name": {
+          "required": false,
+          "description": "Patient's name"
+        },
+        "family": {
+          "required": false,
+          "description": "Patient's family name"
+        },
+        "gender": {
+          "required": false,
+          "description": "Patient's gender"
+        },
+        "dob": {
+          "required": false,
+          "description": "Patient's date of birth (YYYY-MM-DD)"
+        }
+      },
+      "path_params": {}
+    },
+    {
+      "method": "GET",
+      "path": "/:patient_id",
+      "description": "Fetch a patient's details using their patient ID.",
+      "query_params": {
+        "token": {
+          "required": true,
+          "description": "Authentication token"
+        }
+      },
+      "path_params": {
+        "patient_id": {
+          "required": true,
+          "description": "Unique identifier for the patient"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/resource/:resourceType/:id?",
+      "description": "Fetch resource details for a given resource type and ID or filter by patient ID.",
+      "query_params": {
+        "token": {
+          "required": true,
+          "description": "Authentication token"
+        },
+        "patient": {
+          "required": false,
+          "description": "Patient ID to filter resources (only used when 'id' is not provided)"
+        },
+        "parameters": {
+          "required": false,
+          "description": "Parameters specific to each resource type for additional filtering(eg:condition=diabetes&date=YYYY-MM-DD)"
+        }
+      },
+      "path_params": {
+        "resourceType": {
+          "required": true,
+          "description": "Type of resource to fetch (e.g., Observation, Medication, etc.)"
+        },
+        "id": {
+          "required": false,
+          "description": "ID for the specific resource (if provided, 'patient' should not be used)"
+        }
+      },
+      "validation_rules": {
+        "either_id_or_patient": "Either 'id' (resource ID) or 'patient' (query parameter) must be provided, but not both."
+      },
+      "resourceTypes": {
+        "Observation": {
+          "description": "Measurements and simple assertions made about a patient, device or other subject",
+          "parameters": {
+            "category": {
+              "example": "vital-signs",
+              "description": "Filter observations by category",
+              "values": {
+                "social-history": "Patient's lifestyle, occupation, and environmental history.",
+                "vital-signs": "Basic body functions like heart rate, blood pressure, temperature.",
+                "imaging": "Observations from imaging studies (X-ray, MRI, CT, ultrasound).",
+                "laboratory": "Lab test results (chemistry, hematology, pathology, microbiology).",
+                "procedure": "Observations from procedures like catheterization, endoscopy.",
+                "survey": "Results from surveys and assessment tools (Apgar Score, MoCA).",
+                "exam": "Physical exam findings recorded by a clinician.",
+                "therapy": "Observations from non-invasive treatments like physiotherapy, radiation.",
+                "activity": "Records of bodily activity like steps, sleep data, laps swum."
+              }
+            },
+            "code": {
+              "example": "4548-4",
+              "description": "Filter by specific observation code (LOINC format)",
+              "values": {
+                "4548-4": {
+                  "display": "Hemoglobin A1c",
+                  "description": "HbA1c level measurement for diabetes monitoring."
+                },
+                "8480-6": {
+                  "display": "Systolic Blood Pressure",
+                  "description": "Measurement of systolic blood pressure (BP)."
+                },
+                "8462-4": {
+                  "display": "Diastolic Blood Pressure",
+                  "description": "Measurement of diastolic blood pressure (BP)."
+                },
+                "2339-0": {
+                  "display": "Glucose [Mass/volume] in Blood",
+                  "description": "Blood glucose level, used to diagnose and monitor diabetes."
+                },
+                "6299-2": {
+                  "display": "Body Mass Index (BMI)",
+                  "description": "Measurement of body mass index (BMI) to assess weight status."
+                },
+                "8310-5": {
+                  "display": "Body Temperature",
+                  "description": "Measurement of body temperature, commonly taken via oral, axillary, or tympanic methods."
+                },
+                "75626-2": {
+                  "display": "Total score [AUDIT-C]",
+                  "description": "Total score from the Alcohol Use Disorders Identification Test – Consumption (AUDIT-C)."
+                },
+                "55758-7": {
+                  "display": "Patient Health Questionnaire 2 item (PHQ-2) total score [Reported]",
+                  "description": "Total score from the Patient Health Questionnaire 2 item (PHQ-2) for depression screening."
+                },
+                "93025-5": {
+                  "display": "Protocol for Responding to and Assessing Patients' Assets, Risks, and Experiences [PRAPARE]",
+                  "description": "Comprehensive social determinants of health assessment tool."
+                },
+                "72166-2": {
+                  "display": "Tobacco smoking status",
+                  "description": "Patient's current tobacco smoking status."
+                },
+                "18262-6": {
+                  "display": "Low Density Lipoprotein Cholesterol",
+                  "description": "Measurement of LDL cholesterol level."
+                },
+                "2085-9": {
+                  "display": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+                  "description": "Measurement of HDL cholesterol level."
+                },
+                "2571-8": {
+                  "display": "Triglycerides",
+                  "description": "Measurement of triglyceride level."
+                },
+                "2093-3": {
+                  "display": "Cholesterol [Mass/volume] in Serum or Plasma",
+                  "description": "Measurement of total cholesterol level."
+                },
+                "8867-4": {
+                  "display": "Heart rate",
+                  "description": "Measurement of heart rate."
+                },
+                "9279-1": {
+                  "display": "Respiratory rate",
+                  "description": "Measurement of respiratory rate."
+                },
+                "85354-9": {
+                  "display": "Blood pressure panel with all children optional",
+                  "description": "Blood pressure panel including systolic and diastolic blood pressure measurements."
+                },
+                "39156-5": {
+                  "display": "Body mass index (BMI) [Ratio]",
+                  "description": "Calculation of Body Mass Index."
+                },
+                "29463-7": {
+                  "display": "Body Weight",
+                  "description": "Measurement of body weight."
+                },
+                "72514-3": {
+                  "display": "Pain severity - 0-10 verbal numeric rating [Score] - Reported",
+                  "description": "Patient-reported pain severity on a scale of 0 to 10."
+                },
+                "8302-2": {
+                  "display": "Body Height",
+                  "description": "Measurement of body height."
+                },
+                "6690-2": {
+                  "display": "Leukocytes [#/volume] in Blood by Automated count",
+                  "description": "Leukocytes [#/volume] in Blood by Automated count"
+                },
+                "21000-5": {
+                  "display": "Erythrocyte distribution width [Entitic volume] by Automated count",
+                  "description": "Erythrocyte distribution width [Entitic volume] by Automated count"
+                },
+                "786-4": {
+                  "display": "MCHC [Mass/volume] by Automated count",
+                  "description": "MCHC [Mass/volume] by Automated count"
+                },
+                "785-6": {
+                  "display": "MCH [Entitic mass] by Automated count",
+                  "description": "MCH [Entitic mass] by Automated count"
+                },
+                "787-2": {
+                  "display": "MCV [Entitic volume] by Automated count",
+                  "description": "MCV [Entitic volume] by Automated count"
+                },
+                "4544-3": {
+                  "display": "Hematocrit [Volume Fraction] of Blood by Automated count",
+                  "description": "Hematocrit [Volume Fraction] of Blood by Automated count"
+                },
+                "718-7": {
+                  "display": "Hemoglobin [Mass/volume] in Blood",
+                  "description": "Hemoglobin [Mass/volume] in Blood"
+                },
+                "789-8": {
+                  "display": "Erythrocytes [#/volume] in Blood by Automated count",
+                  "description": "Erythrocytes [#/volume] in Blood by Automated count"
+                },
+                "94531-1": {
+                  "display": "SARS-CoV-2 RNA Pnl Resp NAA+probe",
+                  "description": "SARS-CoV-2 RNA Pnl Resp NAA+probe"
+                },
+                "80383-3": {
+                  "display": "Influenza virus B Ag [Presence] in Upper respiratory specimen by Rapid immunoassay",
+                  "description": "Influenza virus B Ag [Presence] in Upper respiratory specimen by Rapid immunoassay"
+                },
+                "80382-5": {
+                  "display": "Influenza virus A Ag [Presence] in Upper respiratory specimen by Rapid immunoassay",
+                  "description": "Influenza virus A Ag [Presence] in Upper respiratory specimen by Rapid immunoassay"
+                },
+                "2708-6": {
+                  "display": "Oxygen saturation in Arterial blood",
+                  "description": "Oxygen saturation in Arterial blood"
+                },
+                "59408-5": {
+                  "display": "Oxygen saturation in Arterial blood by Pulse oximetry",
+                  "description": "Oxygen saturation in Arterial blood by Pulse oximetry"
+                },
+                "76504-0": {
+                  "display": "Total score [HARK]",
+                  "description": "Total score [HARK]"
+                },
+                "70274-6": {
+                  "display": "Generalized anxiety disorder 7 item (GAD-7) total score [Reported.PHQ]",
+                  "description": "Generalized anxiety disorder 7 item (GAD-7) total score [Reported.PHQ]"
+                },
+                "44261-6": {
+                  "display": "Patient Health Questionnaire 9 item (PHQ-9) total score [Reported]",
+                  "description": "Patient Health Questionnaire 9 item (PHQ-9) total score [Reported]"
+                },
+                "32623-1": {
+                  "display": "Platelet mean volume [Entitic volume] in Blood by Automated count",
+                  "description": "Platelet mean volume [Entitic volume] in Blood by Automated count"
+                },
+                "777-3": {
+                  "display": "Platelets [#/volume] in Blood by Automated count",
+                  "description": "Platelets [#/volume] in Blood by Automated count"
+                }
+              }
+            },
+            "date": {
+              "example": "2024-02-01",
+              "description": "Clinically relevant time/time-period for observation"
+            }
+          }
+        },
+        "Encounter": {
+          "description": "The Encounter resource defines the setting where patient care takes place. This includes ambulatory, inpatient, emergency, home health, and virtual encounters.",
+          "parameters": {
+            "date": {
+              "example": "2024-02-01",
+              "description": "A date range that the encounter takes place."
+            },
+            "reason_code": {
+              "example": "308335008",
+              "description": "Filter encounters by reason code (SNOMED CT)",
+              "values": {
+                "308335008": {
+                  "display": "Patient encounter procedure (procedure)",
+                  "description": "A general type for a procedure during an encounter."
+                },
+                "185349003": {
+                  "display": "Encounter for check up (procedure)",
+                  "description": "A routine encounter for general health assessment."
+                },
+                "162673000": {
+                  "display": "General examination of patient (procedure)",
+                  "description": "A general examination of a patient during an encounter."
+                },
+                "389095005": {
+                  "display": "Contraception care (regime/therapy)",
+                  "description": "An encounter related to contraception management."
+                },
+                "66383009": {
+                  "display": "Gingivitis (disorder)",
+                  "description": "Encounter for treatment or management of gingivitis."
+                },
+                "840544004": {
+                  "display": "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)",
+                  "description": "Encounter to investigate a suspected COVID-19 case."
+                },
+                "74400008": {
+                  "display": "Appendicitis (disorder)",
+                  "description": " Appendicitis (disorder)"
+                },
+                "33879002": {
+                  "display": "Administration of vaccine to produce active immunity (procedure)",
+                  "description": "Administration of vaccine to produce active immunity (procedure)"
+                },
+                "412071004": {
+                  "display": "Wheat (substance)",
+                  "description": "Wheat (substance)"
+                },
+                "698314001": {
+                  "display": "Consultation for treatment (procedure)",
+                  "description": "Consultation for treatment (procedure)"
+                },
+                "183996000": {
+                  "display": "Sterilization requested (situation)",
+                  "description": "Sterilization requested (situation)"
+                },
+                "85354-9": {
+                  "display": "Blood pressure panel with all children optional",
+                  "description": "Blood pressure panel with all children optional"
+                },
+                "419199007": {
+                  "display": "Allergy to substance (finding)",
+                  "description": "Allergy to substance (finding)"
+                },
+                "185345009": {
+                  "display": "Encounter for symptom (procedure)",
+                  "description": "Encounter to investigate a suspected COVID-19 case."
+                },
+                "444814009": {
+                  "display": "Viral sinusitis (disorder)",
+                  "description": "Viral sinusitis (disorder)"
+                }
+              }
+            },
+            "type": {
+              "example": "308335008",
+              "description": "Filter encounters by type (SNOMED CT)",
+              "values": {
+                "308335008": {
+                  "display": "Patient encounter procedure (procedure)",
+                  "description": "A general type for a procedure during an encounter."
+                },
+                "185349003": {
+                  "display": "Encounter for check up (procedure)",
+                  "description": "A routine encounter for general health assessment."
+                },
+                "162673000": {
+                  "display": "General examination of patient (procedure)",
+                  "description": "A general examination of a patient during an encounter."
+                },
+                "33879002": {
+                  "display": "Administration of vaccine to produce active immunity (procedure)",
+                  "description": "Administration of vaccine to produce active immunity (procedure)"
+                },
+                "698314001": {
+                  "display": "Consultation for treatment (procedure)",
+                  "description": "Consultation for treatment (procedure)"
+                },
+                "185347001": {
+                  "display": "Encounter for problem (procedure)",
+                  "description": "Encounter for a particular health problem"
+                },
+                "305408004": {
+                  "display": "Admission to surgical department (procedure)",
+                  "description": "Admission to surgical department (procedure)"
+                },
+                "185345009": {
+                  "display": "Encounter for symptom (procedure)",
+                  "description": "Encounter to investigate a suspected COVID-19 case."
+                }
+              }
+            }
+          }
+        },
+        "Condition": {
+          "description": "Represents a health condition of the patient.",
+          "parameters": {
+            "category": {
+              "example": "encounter-diagnosis",
+              "description": "Filter conditions by category",
+              "values": {
+                "encounter-diagnosis": "The condition is related to an encounter diagnosis.",
+                "dental-finding": "The condition is related to dental findings.",
+                "genomics": "The condition is related to genomics.",
+                "health-concern": "The condition reflects a general health concern.",
+                "infection": "The condition is an infection.",
+                "medical-history": "The condition relates to the patient's medical history.",
+                "problem-list-item": "The condition is a specific problem listed for the patient.",
+                "reason-for-visit": "The condition is a reason for the patient's visit."
+              }
+            },
+            "code": {
+              "example": "109570002",
+              "description": "Filter by specific condition code (SNOMED CT)",
+              "values": {
+                "109570002": {
+                  "display": "Primary dental caries (disorder)",
+                  "description": "Cavities (tooth decay) of the primary teeth."
+                },
+                "66383009": {
+                  "display": "Gingivitis (disorder)",
+                  "description": "Inflammation of the gums."
+                },
+                "73595000": {
+                  "display": "Stress (finding)",
+                  "description": "Experiencing stress."
+                },
+                "314529007": {
+                  "display": "Medication review due (situation)",
+                  "description": "A need to review the patient's current medications."
+                },
+                "840539006": {
+                  "display": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+                  "description": "The patient is inflicted with with COVID."
+                },
+                "248595008": {
+                  "display": "Sputum finding (finding)",
+                  "description": "Abnormal findings with respect to sputum (phlegm)."
+                },
+                "160903007": {
+                  "display": "Full-time employment (finding)",
+                  "description": "full-time employemnt status."
+                },
+                "267020005": {
+                  "display": "History of tubal ligation (situation)",
+                  "description": "History of tubal ligation (situation)"
+                },
+                "428251008": {
+                  "display": "History of appendectomy (situation)",
+                  "description": "History of appendectomy (situation)"
+                }
+              }
+            }
+          }
+        },
+        "AllergyIntolerance": {
+          "description": "Represents patient allergies and intolerances.",
+          "parameters": {
+            "category": {
+              "example": "food",
+              "description": "Filter allergy intolerances by category",
+              "values": {
+                "food": "Allergy or intolerance to a specific food.",
+                "medication": "Allergy or intolerance to a medication.",
+                "environment": "Allergy or intolerance to environmental substances (e.g., pollen, dust mites).",
+                "biologic": "Allergy or intolerance to biologic agents (e.g., vaccines, blood products)."
+              }
+            },
+            "code": {
+              "example": "412071004",
+              "description": "Filter by specific allergy/intolerance code (SNOMED CT or RxNorm)",
+              "values": {
+                "412071004": {
+                  "display": "Wheat (substance)",
+                  "description": "Allergy to wheat."
+                },
+                "260147004": {
+                  "display": "House dust mite (organism)",
+                  "description": "Allergy to house dust mites."
+                },
+                "419199007": {
+                  "display": "Allergy to substance (finding)",
+                  "description": "A general allergy to unspecified substance."
+                },
+                "29046": {
+                  "display": "Lisinopril",
+                  "description": "Intolerance to Lisinopril medication"
+                }
+              }
+            },
+            "type": {
+              "example": "allergy",
+              "description": "Filter by the type of reaction",
+              "values": {
+                "allergy": "is an allergy",
+                "intolerance": "is an intolerance"
+              }
+            }
+          }
+        },
+        "Organization": {
+          "description": "Represents an entity responsible for healthcare services.",
+          "parameters": {}
+        },
+        "Practitioner": {
+          "description": "Fetch details of practitioners based on various search parameters.",
+          "parameters": {
+            "address": {
+              "description": "The free-text address of the practitioner."
+            },
+            "address-city": {
+              "description": "The city specified in the address. Cannot be used without 'address-state' or 'address-postalcode'."
+            },
+            "address-postalcode": {
+              "description": "A ZIP code specified in the address."
+            },
+            "address-state": {
+              "description": "A state specified in the address."
+            },
+            "family": {
+              "description": "A portion of the practitioner's family name."
+            },
+            "given": {
+              "description": "A portion of the practitioner's given name."
+            },
+            "name": {
+              "description": "Free text that can match either Family or Given name (or both)."
+            }
+          },
+          "validation_rules": {
+            "city_requires_state_or_zip": "If 'address-city' is provided, either 'address-state' or 'address-postalcode' must also be provided."
+          }
+        },
+        "FamilyMemberHistory": {
+          "description": "Represents a patient's family health history.",
+          "parameters": {}
+        },
+        "Immunization": {
+          "description": "Represents a record of vaccination.",
+          "parameters": {
+            "date": {
+              "example": "2024-01-15",
+              "description": "Vaccination administration date. (YYYY-MM-DD)"
+            },
+            "code": {
+              "example": "52",
+              "description": "Filter by specific vaccine code (CVX system)",
+              "values": {
+                "52": {
+                  "display": "Hep A, adult",
+                  "description": "Hepatitis A vaccine, adult formulation."
+                },
+                "140": {
+                  "display": "Influenza, seasonal, injectable, preservative free",
+                  "description": "Seasonal influenza vaccine, injectable, preservative-free formulation."
+                },
+                "113": {
+                  "display": "Td (adult), 5 Lf tetanus toxoid, preservative free, adsorbed",
+                  "description": "Tetanus and diphtheria toxoids vaccine, adult formulation, preservative-free, adsorbed."
+                },
+                "207": {
+                  "display": "COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5mL dose or 50 mcg/0.25mL dose",
+                  "description": "COVID-19 mRNA vaccine, Lipid Nanoparticle Spike protein, Pfizer, 100 mcg/0.5mL or 50 mcg/0.25mL dose."
+                },
+                "62": {
+                  "display": "HPV, quadrivalent",
+                  "description": "Human Papillomavirus vaccine, quadrivalent"
+                },
+                "208": {
+                  "display": "COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose",
+                  "description": "COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose"
+                },
+                "114": {
+                  "display": "meningococcal MCV4P",
+                  "description": "meningococcal MCV4P"
+                },
+                "20": {
+                  "display": "DTaP",
+                  "description": "DTaP"
+                },
+                "03": {
+                  "display": "MMR",
+                  "description": "MMR"
+                },
+                "10": {
+                  "display": "IPV",
+                  "description": "IPV"
+                },
+                "115": {
+                  "display": "Tdap",
+                  "description": "Tdap"
+                }
+              }
+            }
+          }
+        },
+        "CarePlan": {
+          "description": "Describes the intention of how one or more practitioners intend to deliver care for a particular patient, group or community for a period of time, possibly limited to care for a specific condition or set of conditions.",
+          "parameters": {
+            "category": {
+              "example": "care-path",
+              "description": "Filter conditions by clinical status",
+              "values": {
+                "care-path": {
+                  "description": "A structured, standardized plan outlining the sequence of treatments and interventions for a condition."
+                },
+                "738906000": {
+                  "description": "A CarePlan specifically designed for dental conditions and treatments."
+                },
+                "734163000": {
+                  "description": "A CarePlan that is specific to an individual healthcare encounter."
+                },
+                "inpatient-pathway": {
+                  "description": "A CarePlan outlining the clinical pathway for hospitalized patients, guiding treatment and interventions."
+                },
+                "736353004": {
+                  "description": "A structured plan for managing a patient’s care during a hospital stay."
+                },
+                "38717003": {
+                  "description": "A long-term care plan focused on managing chronic conditions and ongoing treatment strategies."
+                },
+                "736378000": {
+                  "description": "A specialized CarePlan for cancer treatment and management."
+                },
+                "736271009": {
+                  "description": "A structured plan for managing care in an outpatient setting."
+                },
+                "409073007": {
+                  "description": "A CarePlan focused on educating the patient about their condition, treatment, and self-management."
+                },
+                "719091000000102": {
+                  "description": "A CarePlan indicating the need for the patient to complete a health-related questionnaire."
+                }
+              }
+            }
+          }
+        },
+        "Claim": {
+          "description": "Financial instrument which may be used to reimburse or account for healthcare event.",
+          "parameters": {
+            "type": {
+              "example": "professional",
+              "description": "Filter claims by type.",
+              "values": {
+                "professional": "Health professional claim.",
+                "institutional": "Facility, Hospital claim.",
+                "pharmacy": "Pharmacy claim."
+              }
+            },
+            "code": {
+              "example": "308335008",
+              "description": "Filter claims by procedure code",
+              "values": {
+                "308335008": {
+                  "display": "Patient encounter procedure (procedure)",
+                  "description": "Patient encounter procedure"
+                },
+                "76601001": {
+                  "display": "Intramuscular injection (procedure)",
+                  "description": "Intramuscular injection"
+                },
+                "185349003": {
+                  "display": "Encounter for check up (procedure)",
+                  "description": "Encounter for check up (procedure)"
+                },
+                "34043003": {
+                  "display": "Dental consultation and report (procedure)",
+                  "description": "Dental consultation and report (procedure)"
+                },
+                "225362009": {
+                  "display": "Dental care (regime/therapy)",
+                  "description": "Dental care (regime/therapy)"
+                },
+                "277183007": {
+                  "display": "Dental equipment (physical object)",
+                  "description": "Dental equipment (physical object)"
+                },
+                "1230220004": {
+                  "display": "Conventional release periodontal gel (dose form)",
+                  "description": "Conventional release periodontal gel (dose form)"
+                },
+                "469020004": {
+                  "display": "Dental floss (physical object)",
+                  "description": "Dental floss (physical object)"
+                },
+                "1260009003": {
+                  "display": "Removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)",
+                  "description": "Removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)"
+                },
+                "1260010008": {
+                  "display": "Removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)",
+                  "description": "Removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)"
+                },
+                "274788003": {
+                  "display": "Examination of gingivae (procedure)",
+                  "description": "Examination of gingivae (procedure)"
+                },
+                "109570002": {
+                  "display": "Primary dental caries (disorder)",
+                  "description": "Primary dental caries (disorder)"
+                },
+                "1256042007": {
+                  "display": "Restoration of tooth with coverage of all cusps using dental filling material (procedure)",
+                  "description": "Restoration of tooth with coverage of all cusps using dental filling material (procedure)"
+                },
+                "243085009": {
+                  "display": "Oral health education (procedure)",
+                  "description": "Oral health education (procedure)"
+                },
+                "706298007": {
+                  "display": "Dental x-ray system (physical object)",
+                  "description": "Dental x-ray system (physical object)"
+                },
+                "241046008": {
+                  "display": "Dental plain X-ray bitewing (procedure)",
+                  "description": "Dental plain X-ray bitewing (procedure)"
+                },
+                "81733005": {
+                  "display": "Dental surgical procedure (procedure)",
+                  "description": "Dental surgical procedure (procedure)"
+                },
+                "3802001": {
+                  "display": "Dental application of desensitizing medicament (procedure)",
+                  "description": "Dental application of desensitizing medicament (procedure)"
+                },
+                "456191000124101": {
+                  "display": "Postoperative care for dental procedure (regime/therapy)",
+                  "description": "Postoperative care for dental procedure (regime/therapy)"
+                },
+                "58410-2": {
+                  "display": "CBC panel - Blood by Automated count",
+                  "description": "CBC panel - Blood by Automated count"
+                },
+                "710824005": {
+                  "display": "Assessment of health and social care needs (procedure)",
+                  "description": "Assessment of health and social care needs (procedure)"
+                },
+                "710841007": {
+                  "display": "Assessment of anxiety (procedure)",
+                  "description": "Assessment of anxiety (procedure)"
+                },
+                "69737-5": {
+                  "display": "Generalized anxiety disorder 7 item (GAD-7)",
+                  "description": "Generalized anxiety disorder 7 item (GAD-7)"
+                },
+                "866148006": {
+                  "display": "Screening for domestic abuse (procedure)",
+                  "description": "Screening for domestic abuse (procedure)"
+                },
+                "763302001": {
+                  "display": "Assessment using Alcohol Use Disorders Identification Test - Consumption (procedure)",
+                  "description": "Assessment using Alcohol Use Disorders Identification Test - Consumption (procedure)"
+                },
+                "72109-2": {
+                  "display": "Alcohol Use Disorder Identification Test - Consumption [AUDIT-C]",
+                  "description": "Alcohol Use Disorder Identification Test - Consumption [AUDIT-C]"
+                },
+                "103697008": {
+                  "display": "Patient referral for dental care (procedure)",
+                  "description": "Patient referral for dental care (procedure)"
+                },
+                "2001499": {
+                  "display": "Vitamin B12 5 MG/ML Injectable Solution",
+                  "description": "Vitamin B12 5 MG/ML Injectable Solution"
+                },
+                "430193006": {
+                  "display": "Medication reconciliation (procedure)",
+                  "description": "Medication reconciliation (procedure)"
+                }
+              }
+            }
+          }
+        },
+        "Procedure": {
+          "description": "The FHIR Procedure resource defines an activity performed on or with a patient as part of the provision of care. It corresponds with surgeries and procedures performed, including endoscopies and biopsies, as well as less invasive actions like counseling and physiotherapy.",
+          "parameters": {
+            "code": {
+              "example": "76601001",
+              "description": "Filter procedures by code (SNOMED CT)",
+              "values": {
+                "76601001": {
+                  "display": "Intramuscular injection (procedure)",
+                  "description": "Administration of a substance via intramuscular injection."
+                },
+                "308335008": {
+                  "display": "Patient encounter procedure (procedure)",
+                  "description": "General procedure for patient encounter."
+                },
+                "34043003": {
+                  "display": "Dental consultation and report (procedure)",
+                  "description": "Dental consultation and report (procedure)"
+                },
+                "225362009": {
+                  "display": "Dental care (regime/therapy)",
+                  "description": "Dental care (regime/therapy)"
+                },
+                "277183007": {
+                  "display": "Dental equipment (physical object)",
+                  "description": "Dental equipment (physical object)"
+                },
+                "1230220004": {
+                  "display": "Conventional release periodontal gel (dose form)",
+                  "description": "Conventional release periodontal gel (dose form)"
+                },
+                "469020004": {
+                  "display": "Dental floss (physical object)",
+                  "description": "Dental floss (physical object)"
+                },
+                "1260009003": {
+                  "display": "Removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)",
+                  "description": "Removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)"
+                },
+                "1260010008": {
+                  "display": "Removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)",
+                  "description": "Removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)"
+                },
+                "274788003": {
+                  "display": "Examination of gingivae (procedure)",
+                  "description": "Examination of gingivae (procedure)"
+                },
+                "103697008": {
+                  "display": "Patient referral for dental care (procedure)",
+                  "description": "Patient referral for dental care (procedure)"
+                },
+                "710824005": {
+                  "display": "Assessment of health and social care needs (procedure)",
+                  "description": "Assessment of health and social care needs (procedure)"
+                },
+                "710841007": {
+                  "display": "Assessment of anxiety (procedure)",
+                  "description": "Assessment of anxiety (procedure)"
+                },
+                "763302001": {
+                  "display": "Assessment using Alcohol Use Disorders Identification Test - Consumption (procedure)",
+                  "description": "Assessment using Alcohol Use Disorders Identification Test - Consumption (procedure)"
+                }
+              }
+            }
+          }
+        },
+        "DiagnosticReport": {
+          "description": "The findings and interpretation of diagnostic tests performed on patients, groups of patients.",
+          "parameters": {
+            "code": {
+              "example": "34117-2",
+              "description": "Filter Diagnostic Reports by code (LOINC).",
+              "values": {
+                "34117-2": {
+                  "display": "History and physical note",
+                  "description": "A general History and Physical Report."
+                },
+                "51847-2": {
+                  "display": "Evaluation + Plan note",
+                  "description": "Note with both Evaluation and Plan details."
+                },
+                "72109-2": {
+                  "display": "Alcohol Use Disorder Identification Test - Consumption [AUDIT-C]",
+                  "description": "Alcohol Use Disorder Identification Test - Consumption"
+                },
+                "55757-9": {
+                  "display": "Patient Health Questionnaire 2 item (PHQ-2) [Reported]",
+                  "description": "PHQ-2 quick depression assessment"
+                },
+                "94531-1": {
+                  "display": "SARS-CoV-2 RNA Pnl Resp NAA+probe",
+                  "description": "SARS-CoV-2 RNA Pnl Resp NAA+probe test panel"
+                },
+                "80381-7": {
+                  "display": "Influenza virus A and B Ag panel - Upper respiratory specimen by Rapid immunoassay",
+                  "description": "Influenza virus A and B Ag panel - Upper respiratory specimen by Rapid immunoassay"
+                },
+                "57698-3": {
+                  "display": "Lipid panel with direct LDL - Serum or Plasma",
+                  "description": "Lipid panel with direct LDL - Serum or Plasma"
+                },
+                "69737-5": {
+                  "display": "Generalized anxiety disorder 7 item (GAD-7)",
+                  "description": "Generalized anxiety disorder 7 item (GAD-7)"
+                }
+              }
+            },
+            "category": {
+              "example": "LAB",
+              "description": "Filter DocumentReference resources by category (HL7 v2.0074 Observation Sub-type).",
+              "values": {
+                "AU": {
+                  "display": "Audiology",
+                  "description": "Audiology services and related documentation."
+                },
+                "BG": {
+                  "display": "Blood Gases",
+                  "description": "Reports and results related to blood gas analysis."
+                },
+                "BLB": {
+                  "display": "Blood Bank",
+                  "description": "Blood bank records and transfusion information."
+                },
+                "CG": {
+                  "display": "Cytogenetics",
+                  "description": "Cytogenetics test results and reports."
+                },
+                "CUS": {
+                  "display": "Cardiac Ultrasound",
+                  "description": "Cardiac ultrasound (echocardiogram) reports."
+                },
+                "CTH": {
+                  "display": "Cardiac Catheterization",
+                  "description": "Reports from cardiac catheterization procedures."
+                },
+                "CT": {
+                  "display": "CAT Scan",
+                  "description": "Computed tomography (CT) scan reports."
+                },
+                "CH": {
+                  "display": "Chemistry",
+                  "description": "Chemistry laboratory test results."
+                },
+                "CP": {
+                  "display": "Cytopathology",
+                  "description": "Cytopathology reports."
+                },
+                "EC": {
+                  "display": "Electrocardiac (e.g., EKG, EEC, Holter)",
+                  "description": "Electrocardiogram (EKG), electroencephalogram (EEG), and Holter monitor reports."
+                },
+                "EN": {
+                  "display": "Electroneuro (EEG, EMG,EP,PSG)",
+                  "description": "Electroneurophysiology studies (EEG, EMG, Evoked Potentials, Polysomnography)."
+                },
+                "GE": {
+                  "display": "Genetics",
+                  "description": "Genetics test reports and related documentation."
+                },
+                "HM": {
+                  "display": "Hematology",
+                  "description": "Hematology laboratory test results."
+                },
+                "IMG": {
+                  "display": "Diagnostic Imaging",
+                  "description": "General diagnostic imaging reports (X-ray, MRI, etc.)."
+                },
+                "IMM": {
+                  "display": "Immunology",
+                  "description": "Immunology test results and reports."
+                },
+                "LAB": {
+                  "display": "Laboratory",
+                  "description": "General laboratory reports (encompassing multiple lab disciplines)."
+                },
+                "NMS": {
+                  "display": "Nuclear Medicine Scan",
+                  "description": "Reports from nuclear medicine scan"
+                },
+                "OT": {
+                  "display": "Occupational Therapy",
+                  "description": "Occupational Therapy"
+                },
+                "PHR": {
+                  "display": "Pharmacy",
+                  "description": "Pharmacy record and documents"
+                },
+                "PT": {
+                  "display": "Physical Therapy",
+                  "description": "Physical Therapy Reports"
+                },
+                "PHY": {
+                  "display": "Physician (Hx. Dx, admission note, etc.)",
+                  "description": "Physician notes"
+                },
+                "RAD": {
+                  "display": "Radiology",
+                  "description": "General radiology reports"
+                },
+                "SP": {
+                  "display": "Surgical Pathology",
+                  "description": "Surgical Pathology reports and documents"
+                },
+                "URN": {
+                  "display": "Urinalysis",
+                  "description": "Urinalysis report"
+                }
+              }
+            },
+            "status": {
+              "example": "final",
+              "description": "Filter DiagnosticReport resources by status.",
+              "values": {
+                "registered": {
+                  "display": "Registered",
+                  "description": "The report's existence is registered, but there is nothing yet available."
+                },
+                "partial": {
+                  "display": "Partial",
+                  "description": "This is a partial report; data may be incomplete or unverified."
+                },
+                "preliminary": {
+                  "display": "Preliminary",
+                  "description": "Verified early results are available, but not all results are final."
+                },
+                "modified": {
+                  "display": "Modified",
+                  "description": "Prior to being final, the report has been modified."
+                },
+                "final": {
+                  "display": "Final",
+                  "description": "The report is complete and verified by an authorized person."
+                },
+                "amended": {
+                  "display": "Amended",
+                  "description": "Subsequent to being final, the report has been modified."
+                },
+                "corrected": {
+                  "display": "Corrected",
+                  "description": "Subsequent to being final, the report has been modified to correct an error."
+                },
+                "appended": {
+                  "display": "Appended",
+                  "description": "Subsequent to being final, the report has been modified by adding new content. The existing content is unchanged."
+                },
+                "cancelled": {
+                  "display": "Cancelled",
+                  "description": "The report is unavailable because the measurement was not started or not completed."
+                },
+                "entered-in-error": {
+                  "display": "Entered in Error",
+                  "description": "The report has been withdrawn. This electronic record should never have existed."
+                },
+                "unknown": {
+                  "display": "Unknown",
+                  "description": "The authoring system does not know which of the status values applies."
+                }
+              }
+            }
+          }
+        },
+        "ServiceRequest": {
+          "description": "ServiceRequest represents a proposal or plan or order for a service to be performed that would result in a Procedure or DiagnosticReport, which in turn may reference one or more Observations, which summarize the performance of the procedures and associated documentation such as observations, images, findings that are relevant to the treatment/management of the subject",
+          "parameters": {
+            "status": {
+              "example": "active",
+              "description": "Filter ServiceRequest by status.",
+              "values": {
+                "draft": {
+                  "display": "Draft",
+                  "description": "The request has been created but is not yet complete or ready for action."
+                },
+                "active": {
+                  "display": "Active",
+                  "description": "The request is in force and ready to be acted upon."
+                },
+                "on-hold": {
+                  "display": "On Hold",
+                  "description": "The request has been temporarily withdrawn but is expected to resume in the future."
+                },
+                "revoked": {
+                  "display": "Revoked",
+                  "description": "The request has been terminated prior to the known full completion of the intended actions. No further activity should occur."
+                },
+                "completed": {
+                  "display": "Completed",
+                  "description": "The activity described by the request has been fully performed. No further activity will occur."
+                },
+                "entered-in-error": {
+                  "display": "Entered in Error",
+                  "description": "This request should never have existed and should be considered 'void'. If real-world activity has occurred, the status should be 'revoked' rather than 'entered-in-error'."
+                },
+                "unknown": {
+                  "display": "Unknown",
+                  "description": "The authoring/source system does not know which of the status values currently applies for this request."
+                }
+              }
+            },
+            "intent": {
+              "example": "order",
+              "description": "Filter ServiceRequest by intent.",
+              "values": {
+                "proposal": {
+                  "display": "Proposal",
+                  "description": "The request is a suggestion made by someone/something that does not have an intention to ensure it occurs and without providing an authorization to act."
+                },
+                "plan": {
+                  "display": "Plan",
+                  "description": "The request represents an intention to ensure something occurs without providing an authorization for others to act."
+                },
+                "directive": {
+                  "display": "Directive",
+                  "description": "The request represents a legally binding instruction authored by a Patient or RelatedPerson."
+                },
+                "order": {
+                  "display": "Order",
+                  "description": "The request represents a request/demand and authorization for action by the requestor."
+                },
+                "original-order": {
+                  "display": "Original Order",
+                  "description": "The request represents an original authorization for action."
+                },
+                "reflex-order": {
+                  "display": "Reflex Order",
+                  "description": "The request represents an automatically generated supplemental authorization for action based on a parent authorization together with initial results of the action taken against that parent authorization."
+                },
+                "filler-order": {
+                  "display": "Filler Order",
+                  "description": "The request represents the view of an authorization instantiated by a fulfilling system representing the details of the fulfiller's intention to act upon a submitted order."
+                },
+                "instance-order": {
+                  "display": "Instance Order",
+                  "description": "An order created in fulfillment of a broader order that represents the authorization for a single activity occurrence. E.g. The administration of a single dose of a drug."
+                },
+                "option": {
+                  "display": "Option",
+                  "description": "The request represents a component or option for a RequestOrchestration that establishes timing, conditionality and/or other constraints among a set of requests. Refer to RequestOrchestration for additional information on how this status is used."
+                }
+              }
+            },
+            "code": {
+              "example": "71388002",
+              "description": "Filter ServiceRequest by a common procedure code. loinc code can also be used",
+              "values": {
+                "71388002": {
+                  "display": "Procedure",
+                  "description": "General procedure, use for broad categorization."
+                },
+                "306005": {
+                  "display": "Echography of kidney",
+                  "description": "Ultrasound imaging of the kidney."
+                },
+                "346004": {
+                  "display": "Periodontal scaling and root planing, per quadrant",
+                  "description": "Deep cleaning of teeth to treat gum disease."
+                },
+                "762008": {
+                  "display": "Computerized axial tomography of cervical spine with contrast",
+                  "description": "CT scan of the neck with contrast dye."
+                },
+                "2279008": {
+                  "display": "Urinalysis, automated",
+                  "description": "automated Urinalysis"
+                },
+                "767002": {
+                  "display": "White blood cell count",
+                  "description": "Measurement of white blood cells in blood."
+                },
+                "2270007": {
+                  "display": "Changing tracheostomy tube",
+                  "description": "Changing Tracheostomy tube due to any issue."
+                },
+                "5447007": {
+                  "display": "Transfusion",
+                  "description": "Transfusion of blood components."
+                },
+                "5902003": {
+                  "display": "History and physical examination, complete",
+                  "description": "History and physical examination."
+                },
+                "5154007": {
+                  "display": "Speech therapy",
+                  "description": "Treatment of speech and communication disorders."
+                },
+                "3895009": {
+                  "display": "Application of dressing",
+                  "description": "Bandaging a wound."
+                },
+                "166001": {
+                  "display": "Behavioral therapy",
+                  "description": "Treatment to change behaviors."
+                },
+                "342002": {
+                  "display": "Amobarbital interview",
+                  "description": "Psychiatric interview enhanced by amobarbital."
+                },
+                "746002": {
+                  "display": "Chiropractic adjustment of coccyx subluxation",
+                  "description": "Chiropractic adjustment"
+                },
+                "730005": {
+                  "display": "Incision of subcutaneous tissue",
+                  "description": "Incision of subcutaneous tissue"
+                },
+                "5165002": {
+                  "display": "Division of thoracic artery",
+                  "description": "Division of thoracic artery"
+                },
+                "870006": {
+                  "display": "Carbamazepine measurement",
+                  "description": "Carbamazepine measurement"
+                },
+                "2530001": {
+                  "display": "Chiropractic visit",
+                  "description": "Chiropractic visit"
+                },
+                "5113004": {
+                  "display": "T4 free measurement",
+                  "description": "T4 free measurement"
+                }
+              }
+            },
+            "priority": {
+              "example": "urgent",
+              "description": "Filter ServiceRequest by priority.",
+              "values": {
+                "routine": {
+                  "display": "Routine",
+                  "description": "The request has normal priority."
+                },
+                "urgent": {
+                  "display": "Urgent",
+                  "description": "The request should be actioned promptly - higher priority than routine."
+                },
+                "asap": {
+                  "display": "ASAP",
+                  "description": "The request should be actioned as soon as possible - higher priority than urgent."
+                },
+                "stat": {
+                  "display": "STAT",
+                  "description": "The request should be actioned immediately - highest possible priority.  E.g., an emergency."
+                }
+              }
+            },
+            "category": {
+              "example": "108252007",
+              "description": "Filter ServiceRequest by category of service requested.loinc code can also be used",
+              "values": {
+                "108252007": {
+                  "display": "Laboratory procedure",
+                  "description": "Request for a procedure performed in a laboratory setting."
+                },
+                "363679005": {
+                  "display": "Imaging",
+                  "description": "Request for an imaging service (e.g., X-ray, MRI, CT scan)."
+                },
+                "409063005": {
+                  "display": "Counselling",
+                  "description": "Request for counseling services."
+                },
+                "409073007": {
+                  "display": "Education",
+                  "description": "Request for an educational service (e.g., patient education)."
+                },
+                "387713003": {
+                  "display": "Surgical procedure",
+                  "description": "Request for a surgical procedure."
+                }
+              }
+            },
+            "reasonCode": {
+              "example": "404684003",
+              "description": "Filter ServiceRequest by the reason for the service request.  Uses SNOMED CT codes.",
+              "values": {
+                "404684003": {
+                  "display": "Clinical finding (finding)",
+                  "description": "A general clinical finding; use for broad categorization of reasons."
+                },
+                "109006": {
+                  "display": "Anxiety disorder of childhood OR adolescence",
+                  "description": "Request prompted by a diagnosis of anxiety disorder in a child or adolescent."
+                },
+                "563001": {
+                  "display": "Nystagmus",
+                  "description": "Request due to the presence of nystagmus (involuntary eye movement)."
+                },
+                "3424008": {
+                  "display": "Tachycardia",
+                  "description": "Service requested because of tachycardia (rapid heart rate)."
+                },
+                "1023001": {
+                  "display": "Apnea",
+                  "description": "Request due to apnea (temporary cessation of breathing)."
+                },
+                "3415004": {
+                  "display": "Cyanosis",
+                  "description": "Service requested because of cyanosis (bluish discoloration of the skin due to lack of oxygen)."
+                },
+                "3716002": {
+                  "display": "Goiter",
+                  "description": "Service request is related to a goiter (enlarged thyroid gland)."
+                },
+                "2901004": {
+                  "display": "Melena",
+                  "description": "Service request due to Melena(black stool)"
+                },
+                "2919008": {
+                  "display": "Nausea, vomiting and diarrhea",
+                  "description": "Service request due to Nausea, vomiting and diarrhea"
+                },
+                "1126007": {
+                  "display": "Knee locking",
+                  "description": "Service request due to Knee locking"
+                },
+                "4556007": {
+                  "display": "Periodontal disease",
+                  "description": "Service request due to Periodontal disease"
+                },
+                "2177002": {
+                  "display": "Postherpetic neuralgia",
+                  "description": "Service request due to Postherpetic neuralgia"
+                },
+                "568005": {
+                  "display": "Tic disorder",
+                  "description": "Service request due to Tic disorder"
+                },
+                "776009": {
+                  "display": "Partial arterial retinal occlusion",
+                  "description": "Service request due to Partial arterial retinal occlusion"
+                },
+                "813001": {
+                  "display": "Ankle instability",
+                  "description": "Service request due to Ankle instability"
+                },
+                "4855003": {
+                  "display": "Diabetic retinopathy",
+                  "description": "Service request due to Diabetic retinopathy"
+                },
+                "2055003": {
+                  "display": "Recurrent erosion of cornea",
+                  "description": "Service request due to Recurrent erosion of cornea"
+                },
+                "1482004": {
+                  "display": "Chalazion",
+                  "description": "Service request due to Chalazion"
+                },
+                "2070002": {
+                  "display": "Burning sensation in eye",
+                  "description": "Service request due to Burning sensation in eye"
+                },
+                "3253007": {
+                  "display": "Discoloration of skin",
+                  "description": "Service request due to Discoloration of skin"
+                }
+              }
+            }
+          }
+        },
+        "Composition": {
+          "description": "A set of healthcare-related information that is assembled together into a single logical package that provides a single coherent statement of meaning, establishes its own context and that has clinical attestation with regard to who is making the statement. A Composition defines the structure and narrative content necessary for a document. However, a Composition alone does not constitute a document. Rather, the Composition must be the first entry in a Bundle where Bundle.type=document, and any other resources referenced from Composition must be included as subsequent entries in the Bundle (for example Patient, Practitioner, Encounter, etc.).",
+          "parameters": {
+            "date": {
+              "example": "2024-02-01",
+              "description": "Composition editing time"
+            },
+            "title": {
+              "description": "Human Readable name/title"
+            },
+            "status": {
+              "example": "final",
+              "description": "Filter Composition resources by status.",
+              "values": {
+                "registered": {
+                  "display": "Registered",
+                  "description": "The existence of the composition is registered, but there is nothing yet available."
+                },
+                "partial": {
+                  "display": "Partial",
+                  "description": "This is a partial (e.g., initial, interim, or preliminary) composition; data may be incomplete or unverified."
+                },
+                "preliminary": {
+                  "display": "Preliminary",
+                  "description": "Verified early results are available, but not all results are final."
+                },
+                "final": {
+                  "display": "Final",
+                  "description": "This version of the composition is complete, verified, and no further work is planned. Subsequent updates create a new version."
+                },
+                "amended": {
+                  "display": "Amended",
+                  "description": "The content or referenced resources have been modified (edited or added to) after being released as 'final'."
+                },
+                "corrected": {
+                  "display": "Corrected",
+                  "description": "Subsequent to being final, the content has been modified to correct an error."
+                },
+                "appended": {
+                  "display": "Appended",
+                  "description": "Subsequent to being final, new content has been added. The existing content is unchanged."
+                },
+                "cancelled": {
+                  "display": "Cancelled",
+                  "description": "The composition is unavailable because the creation was not started or not completed (also sometimes called 'aborted')."
+                },
+                "entered-in-error": {
+                  "display": "Entered in Error",
+                  "description": "The composition was created in error, and this amendment marks that the series should not be considered valid."
+                },
+                "deprecated": {
+                  "display": "Deprecated",
+                  "description": "This composition has been withdrawn or superseded and should no longer be used."
+                },
+                "unknown": {
+                  "display": "Unknown",
+                  "description": "The authoring system does not know which of the status values applies. *Not* to be used for 'other' - one of the listed statuses applies."
+                }
+              }
+            },
+            "type": {
+              "example": "11486-8",
+              "description": "Filter Composition resources by type (LOINC codes for common document types).",
+              "values": {
+                "11485-0": {
+                  "display": "Anesthesia records",
+                  "description": "Records related to anesthesia administration during a procedure."
+                },
+                "11486-8": {
+                  "display": "Chemotherapy records",
+                  "description": "Records documenting chemotherapy treatments."
+                },
+                "11488-4": {
+                  "display": "Consult note",
+                  "description": "Note documenting a consultation from another provider."
+                },
+                "11490-0": {
+                  "display": "Physician Discharge summary",
+                  "description": "Summary of a patient's hospital stay, prepared by a physician at discharge."
+                },
+                "11492-6": {
+                  "display": "Provider-unspecifed, History and physical note",
+                  "description": "A general history and physical examination note; author not specified."
+                },
+                "11502-2": {
+                  "display": "Laboratory report",
+                  "description": "Report of laboratory test results."
+                },
+                "11504-8": {
+                  "display": "Surgical operation note",
+                  "description": "Note documenting the details of a surgical operation."
+                },
+                "11506-3": {
+                  "display": "Progress note",
+                  "description": "A general note documenting the patient's progress over time."
+                },
+                "15507-7": {
+                  "display": "Emergency department Progress note",
+                  "description": "Progress note created during an emergency department visit."
+                },
+                "18743-5": {
+                  "display": "Autopsy report",
+                  "description": "A report detailing the findings of an autopsy."
+                },
+                "18842-5": {
+                  "display": "Discharge summary",
+                  "description": "A general discharge summary document."
+                },
+                "11523-8": {
+                  "display": "EEG study",
+                  "description": "EEG study document"
+                },
+                "11524-6": {
+                  "display": "EKG study",
+                  "description": "EKG study document"
+                },
+                "24725-4": {
+                  "display": "CT Head",
+                  "description": "CT Head report"
+                },
+                "11525-3": {
+                  "display": "US for pregnancy",
+                  "description": "Ultrasound for pregnancy"
+                },
+                "11527-9": {
+                  "display": "Psychiatry study",
+                  "description": "Psychiatry study"
+                },
+                "11529-5": {
+                  "display": "Surgical pathology study",
+                  "description": "Surgical pathology study report"
+                },
+                "18746-8": {
+                  "display": "Colonoscopy study",
+                  "description": "Colonoscopy study"
+                },
+                "18748-4": {
+                  "display": "Diagnostic imaging study",
+                  "description": "Diagnostic imaging study"
+                }
+              }
+            },
+            "category": {
+              "example": "11486-8",
+              "description": "Filter Composition resources by type (LOINC codes for common document types).",
+              "values": {
+                "11485-0": {
+                  "display": "Anesthesia records",
+                  "description": "Records related to anesthesia administration during a procedure."
+                },
+                "11486-8": {
+                  "display": "Chemotherapy records",
+                  "description": "Records documenting chemotherapy treatments."
+                },
+                "11488-4": {
+                  "display": "Consult note",
+                  "description": "Note documenting a consultation from another provider."
+                },
+                "11490-0": {
+                  "display": "Physician Discharge summary",
+                  "description": "Summary of a patient's hospital stay, prepared by a physician at discharge."
+                },
+                "11492-6": {
+                  "display": "Provider-unspecifed, History and physical note",
+                  "description": "A general history and physical examination note; author not specified."
+                },
+                "11502-2": {
+                  "display": "Laboratory report",
+                  "description": "Report of laboratory test results."
+                },
+                "11504-8": {
+                  "display": "Surgical operation note",
+                  "description": "Note documenting the details of a surgical operation."
+                },
+                "11506-3": {
+                  "display": "Progress note",
+                  "description": "A general note documenting the patient's progress over time."
+                },
+                "15507-7": {
+                  "display": "Emergency department Progress note",
+                  "description": "Progress note created during an emergency department visit."
+                },
+                "18743-5": {
+                  "display": "Autopsy report",
+                  "description": "A report detailing the findings of an autopsy."
+                },
+                "18842-5": {
+                  "display": "Discharge summary",
+                  "description": "A general discharge summary document."
+                },
+                "11523-8": {
+                  "display": "EEG study",
+                  "description": "EEG study document"
+                },
+                "11524-6": {
+                  "display": "EKG study",
+                  "description": "EKG study document"
+                },
+                "24725-4": {
+                  "display": "CT Head",
+                  "description": "CT Head report"
+                },
+                "11525-3": {
+                  "display": "US for pregnancy",
+                  "description": "Ultrasound for pregnancy"
+                },
+                "11527-9": {
+                  "display": "Psychiatry study",
+                  "description": "Psychiatry study"
+                },
+                "11529-5": {
+                  "display": "Surgical pathology study",
+                  "description": "Surgical pathology study report"
+                },
+                "18746-8": {
+                  "display": "Colonoscopy study",
+                  "description": "Colonoscopy study"
+                },
+                "18748-4": {
+                  "display": "Diagnostic imaging study",
+                  "description": "Diagnostic imaging study"
+                }
+              }
+            },
+            "code": {
+              "example": "10164-2",
+              "description": "Filter Composition resources by section code (LOINC codes for section types within a document).",
+              "values": {
+                "10154-3": {
+                  "display": "Chief complaint Narrative - Reported",
+                  "description": "Narrative description of the patient's primary reason for seeking care."
+                },
+                "10164-2": {
+                  "display": "History of Present illness Narrative",
+                  "description": "Narrative summary of the patient's current illness or condition."
+                },
+                "8648-8": {
+                  "display": "Hospital course Narrative",
+                  "description": "Narrative summary of the patient's hospital stay."
+                },
+                "8653-8": {
+                  "display": "Hospital Discharge instructions",
+                  "description": "Instructions given to the patient upon discharge from the hospital."
+                },
+                "11493-4": {
+                  "display": "Hospital discharge studies summary Narrative",
+                  "description": "Summary of Hospital discharge studies "
+                },
+                "11535-2": {
+                  "display": "Hospital discharge Dx Narrative",
+                  "description": "Summary of Hospital discharge Dx"
+                },
+                "29299-5": {
+                  "display": "Reason for visit Narrative",
+                  "description": "Reason for visit"
+                },
+                "47420-5": {
+                  "display": "Functional status assessment note",
+                  "description": "Functional status assessment note"
+                },
+                "47519-4": {
+                  "display": "History of Procedures Document",
+                  "description": "History of Procedures Document"
+                },
+                "48765-2": {
+                  "display": "Allergies and adverse reactions Document",
+                  "description": "Allergies and adverse reactions Document"
+                },
+                "61150-9": {
+                  "display": "Subjective Narrative",
+                  "description": "Subjective Narrative"
+                },
+                "8716-3": {
+                  "display": "Vital signs",
+                  "description": "Vital signs"
+                },
+                "10210-3": {
+                  "display": "Physical findings of General status Narrative",
+                  "description": "Physical findings of General status Narrative"
+                },
+                "10157-6": {
+                  "display": "History of family member diseases Narrative",
+                  "description": "History of family member diseases Narrative"
+                },
+                "10160-0": {
+                  "display": "History of Medication use Narrative",
+                  "description": "History of Medication use Narrative"
+                },
+                "10187-3": {
+                  "display": "Review of systems Narrative - Reported",
+                  "description": "Review of systems Narrative"
+                },
+                "11329-0": {
+                  "display": "History general Narrative - Reported",
+                  "description": "History general Narrative"
+                },
+                "11348-0": {
+                  "display": "History of Past illness Narrative",
+                  "description": "History of Past illness Narrative"
+                }
+              }
+            }
+          }
+        },
+        "MedicationRequest": {
+          "description": "An order or request for both supply of the medication and the instructions for administration of the medication to a patient. The resource is called 'MedicationRequest' rather than 'MedicationPrescription' or 'MedicationOrder' to generalize the use across inpatient and outpatient settings, including care plans, etc., and to harmonize with workflow patterns.",
+          "parameters": {
+            "status": {
+              "example": "active",
+              "description": "Filter MedicationRequest resources by status.",
+              "values": {
+                "active": {
+                  "display": "Active",
+                  "description": "The request is 'actionable', but not all actions implied by it have occurred yet."
+                },
+                "on-hold": {
+                  "display": "On Hold",
+                  "description": "Actions implied by the request are to be temporarily halted. The request might or might not be resumed. May also be called 'suspended'."
+                },
+                "ended": {
+                  "display": "Ended",
+                  "description": "The request is no longer active and the subject should no longer be taking the medication."
+                },
+                "stopped": {
+                  "display": "Stopped",
+                  "description": "Actions implied by the request are to be permanently halted, before all of the administrations occurred. This should not be used if the original order was entered in error."
+                },
+                "completed": {
+                  "display": "Completed",
+                  "description": "All actions that are implied by the request have occurred."
+                },
+                "cancelled": {
+                  "display": "Cancelled",
+                  "description": "The request has been withdrawn before any administrations have occurred."
+                },
+                "entered-in-error": {
+                  "display": "Entered in Error",
+                  "description": "The request was recorded against the wrong patient or for some reason should not have been recorded (e.g. wrong medication, wrong dose, etc.). Some of the actions that are implied by the medication request may have occurred. For example, the medication may have been dispensed and the patient may have taken some of the medication."
+                },
+                "draft": {
+                  "display": "Draft",
+                  "description": "The request is not yet 'actionable', e.g. it is a work in progress, requires sign-off, verification or needs to be run through decision support process."
+                },
+                "unknown": {
+                  "display": "Unknown",
+                  "description": "The authoring/source system does not know which of the status values currently applies for this request. Note: This concept is not to be used for 'other' - one of the listed statuses is presumed to apply, but the authoring/source system does not know which."
+                }
+              }
+            },
+            "intent": {
+              "example": "order",
+              "description": "Filter MedicationRequest resources by intent.",
+              "values": {
+                "proposal": {
+                  "display": "Proposal",
+                  "description": "The request is a suggestion made by someone/something that doesn't have an intention to ensure it occurs and without providing an authorization to act."
+                },
+                "plan": {
+                  "display": "Plan",
+                  "description": "The request represents an intention to ensure something occurs without providing an authorization for others to act."
+                },
+                "order": {
+                  "display": "Order",
+                  "description": "The request represents a request/demand and authorization for action."
+                },
+                "original-order": {
+                  "display": "Original Order",
+                  "description": "The request represents the original authorization for the medication request."
+                },
+                "reflex-order": {
+                  "display": "Reflex Order",
+                  "description": "The request represents an automatically generated supplemental authorization for action based on a parent authorization together with initial results of the action taken against that parent authorization."
+                },
+                "filler-order": {
+                  "display": "Filler Order",
+                  "description": "The request represents the view of an authorization instantiated by a fulfilling system representing the details of the fulfiller's intention to act upon a submitted order."
+                },
+                "instance-order": {
+                  "display": "Instance Order",
+                  "description": "The request represents an instance for the particular order and is used to generate a schedule of requests on a medication administration record (MAR)."
+                },
+                "option": {
+                  "display": "Option",
+                  "description": "The request represents a component or option for a RequestOrchestration that establishes timing, conditionality and/or other constraints among a set of requests."
+                }
+              }
+            },
+            "medicationCode": {
+              "example": "763158003",
+              "description": "Filter MedicationRequest resources by medication code (SNOMED CT).",
+              "values": {
+                "763158003": {
+                  "display": "Medicinal product (product)",
+                  "description": "A general medicinal product; use for broad categorization."
+                },
+                "796001": {
+                  "display": "Product containing digoxin (medicinal product)",
+                  "description": "Medication containing digoxin, used to treat heart conditions."
+                },
+                "544002": {
+                  "display": "Product containing melphalan (medicinal product)",
+                  "description": "Medication containing melphalan, a chemotherapy drug."
+                },
+                "1389007": {
+                  "display": "Product containing beclometasone (medicinal product)",
+                  "description": "Medication containing beclometasone, a corticosteroid."
+                },
+                "16403005": {
+                  "display": "Non-steroidal anti-inflammatory agent",
+                  "description": "General type for a non-steroidal anti-inflammatory drug (NSAID)."
+                },
+                "2016004": {
+                  "display": "Product containing dextromethorphan (medicinal product)",
+                  "description": "Medication containing dextromethorphan, a cough suppressant."
+                },
+                "5797005": {
+                  "display": "Product containing clotrimazole (medicinal product)",
+                  "description": "Medication containing clotrimazole, an antifungal."
+                },
+                "7561000": {
+                  "display": "Product containing dexamethasone (medicinal product)",
+                  "description": "Medication containing dexamethasone, a corticosteroid."
+                },
+                "30427009": {
+                  "display": "Product containing erythromycin (medicinal product)",
+                  "description": "Medication containing erythromycin, an antibiotic."
+                },
+                "3814009": {
+                  "display": "Product containing propylthiouracil (medicinal product)",
+                  "description": "Medication containing propylthiouracil, used to treat hyperthyroidism."
+                },
+                "5924003": {
+                  "display": "Product containing isosorbide dinitrate (medicinal product)",
+                  "description": "Medication containing isosorbide dinitrate, used to treat angina."
+                },
+                "1182007": {
+                  "display": "Hypotensive agent",
+                  "description": "Hypotensive agent"
+                },
+                "7092007": {
+                  "display": "Product containing metoprolol (medicinal product)",
+                  "description": "Product containing metoprolol (medicinal product)"
+                },
+                "10756001": {
+                  "display": "Product containing haloperidol (medicinal product)",
+                  "description": "Product containing haloperidol (medicinal product)"
+                },
+                "5776009": {
+                  "display": "Medicinal product acting as anesthetic agent (product)",
+                  "description": "Medicinal product acting as anesthetic agent (product)"
+                },
+                "8348002": {
+                  "display": "Product containing cyclopentolate (medicinal product)",
+                  "description": "Product containing cyclopentolate (medicinal product)"
+                },
+                "8416000": {
+                  "display": "Product containing dicloxacillin (medicinal product)",
+                  "description": "Product containing dicloxacillin (medicinal product)"
+                },
+                "73074003": {
+                  "display": "Product containing colistin (medicinal product)",
+                  "description": "Product containing colistin (medicinal product)"
+                },
+                "33231001": {
+                  "display": "Product containing pentobarbital (medicinal product)",
+                  "description": "Product containing pentobarbital (medicinal product)"
+                },
+                "12096000": {
+                  "display": "Product containing nystatin (medicinal product)",
+                  "description": "Product containing nystatin (medicinal product)"
+                },
+                "16791000": {
+                  "display": "Product containing cefradine (medicinal product)",
+                  "description": "Product containing cefradine (medicinal product)"
+                },
+                "1703007": {
+                  "display": "Increased leg circumference",
+                  "description": "Increased leg circumference"
+                },
+                "10504007": {
+                  "display": "Product containing doxycycline (medicinal product)",
+                  "description": "Product containing doxycycline (medicinal product)"
+                },
+                "12436009": {
+                  "display": "Product containing vinblastine (medicinal product)",
+                  "description": "Product containing vinblastine (medicinal product)"
+                },
+                "2477008": {
+                  "display": "Superficial thrombophlebitis",
+                  "description": "Superficial thrombophlebitis"
+                },
+                "6247001": {
+                  "display": "Product containing folic acid (medicinal product)",
+                  "description": "Product containing folic acid (medicinal product)"
+                },
+                "17600005": {
+                  "display": "Diagnostic radioisotope",
+                  "description": "Diagnostic radioisotope"
+                },
+                "20201001": {
+                  "display": "Product containing nafoxidine (medicinal product)",
+                  "description": "Product containing nafoxidine (medicinal product)"
+                },
+                "20320002": {
+                  "display": "Product containing hydrocodone (medicinal product)",
+                  "description": "Product containing hydrocodone (medicinal product)"
+                },
+                "2507004": {
+                  "display": "Product containing aciclovir (medicinal product)",
+                  "description": "Product containing aciclovir (medicinal product)"
+                },
+                "2651006": {
+                  "display": "Clinical stage IV",
+                  "description": "Clinical stage IV"
+                }
+              }
+            },
+            "subject": {
+              "description": "Individual or group for whom the medication has been requested.",
+              "reference": "Patient/bbdda9d7-e425-4948-b643-bec5576fbdm2d",
+              "type": "Patient"
+            },
+            "dosageInstruction": {
+              "example": "{ \"text\": \"Take one tablet by mouth once daily\", \"timing\": { \"repeat\": { \"frequency\": 1, \"period\": 1, \"periodUnit\": \"d\" } }, \"doseAndRate\": [{ \"doseQuantity\": { \"value\": 5, \"unit\": \"mg\" } }] }",
+              "description": "Details on the intended dosage of the medication, allows filtering by specific aspects of dosage.",
+              "parameters": {
+                "text": {
+                  "type": "string",
+                  "description": "Free text dosage instructions (SIG), e.g., 'Take one tablet by mouth once daily'."
+                },
+                "sequence": {
+                  "type": "integer",
+                  "description": "The order of the dosage instructions (e.g., if multiple dosages are prescribed)."
+                },
+                "additionalInstruction": {
+                  "type": "CodeableConcept",
+                  "description": "Supplemental instruction or warnings, e.g., 'with meals', 'may cause drowsiness'.",
+                  "values": {
+                    "with-meals": {
+                      "display": "With meals",
+                      "description": "Take the medication with meals."
+                    },
+                    "may-cause-drowsiness": {
+                      "display": "May cause drowsiness",
+                      "description": "This medication may cause drowsiness."
+                    }
+                  }
+                },
+                "patientInstruction": {
+                  "type": "string",
+                  "description": "Patient-oriented instructions for taking the medication."
+                },
+                "timingFrequency": {
+                  "type": "integer",
+                  "description": "Frequency of medication administration within the specified period (Timing.repeat.frequency)."
+                },
+                "timingPeriod": {
+                  "type": "decimal",
+                  "description": "The time period over which the medication should be taken Timing.repeat.period).",
+                  "values": {
+                    "1": "daily",
+                    "7": "weekly",
+                    "30": "monthly"
+                  }
+                },
+                "timingPeriodUnit": {
+                  "type": "string",
+                  "description": "The unit of time for the timing period Timing.repeat.periodUnit).",
+                  "values": {
+                    "s": {
+                      "display": "seconds",
+                      "description": "Seconds"
+                    },
+                    "min": {
+                      "display": "minutes",
+                      "description": "Minutes"
+                    },
+                    "h": {
+                      "display": "hours",
+                      "description": "Hours"
+                    },
+                    "d": {
+                      "display": "days",
+                      "description": "Days"
+                    },
+                    "wk": {
+                      "display": "weeks",
+                      "description": "Weeks"
+                    },
+                    "mo": {
+                      "display": "months",
+                      "description": "Months"
+                    },
+                    "a": {
+                      "display": "years",
+                      "description": "Years"
+                    }
+                  }
+                },
+                "asNeeded": {
+                  "type": "boolean",
+                  "description": "Indicates if the medication should be taken only 'as needed'."
+                },
+                "asNeededFor": {
+                  "type": "CodeableConcept",
+                  "description": "Specific condition or reason for taking the medication 'as needed'."
+                },
+                "site": {
+                  "type": "CodeableConcept",
+                  "description": "Body site for medication administration."
+                },
+                "route": {
+                  "type": "CodeableConcept",
+                  "description": "Route of administration (e.g., oral, intravenous)."
+                },
+                "method": {
+                  "type": "CodeableConcept",
+                  "description": "Technique for administering the medication (e.g., nebulizer)."
+                },
+                "doseQuantityValue": {
+                  "type": "decimal",
+                  "description": "The numerical value of the dose quantity (DoseAndRate.doseQuantity.value)."
+                },
+                "doseQuantityUnit": {
+                  "type": "string",
+                  "description": "Unit of measure for the dose quantity (DoseAndRate.doseQuantity.unit), e.g., 'mg', 'mL'.",
+                  "values": {
+                    "mg": {
+                      "display": "mg",
+                      "description": "Milligram"
+                    },
+                    "mL": {
+                      "display": "mL",
+                      "description": "Milliliter"
+                    }
+                  }
+                },
+                "rateRatio": {
+                  "type": "Ratio",
+                  "description": "Amount of medication per unit of time as a ratio (DoseAndRate.rateRatio)."
+                },
+                "rateRange": {
+                  "type": "Range",
+                  "description": "Amount of medication per unit of time as a range (DoseAndRate.rateRange)."
+                },
+                "rateQuantity": {
+                  "type": "Quantity(SimpleQuantity)",
+                  "description": "Amount of medication per unit of time (DoseAndRate.rateQuantity)."
+                },
+                "maxDosePerPeriod": {
+                  "type": "Ratio",
+                  "description": "Upper limit on medication per unit of time (maxDosePerPeriod)."
+                },
+                "maxDosePerAdministrationValue": {
+                  "type": "decimal",
+                  "description": "Upper limit on medication per administration."
+                },
+                "maxDosePerLifetimeValue": {
+                  "type": "decimal",
+                  "description": "Upper limit on medication per lifetime of the patient."
+                }
+              }
+            }
+          }
+        },
+        "DocumentReference": {
+          "description": "A reference to a document of any kind for any purpose. While the term “document” implies a more narrow focus, for this resource this 'document' encompasses any serialized object with a mime-type, it includes formal patient-centric documents (CDA), clinical notes, scanned paper, non-patient specific documents like policy text, as well as a photo, video, or audio recording acquired or used in healthcare. The DocumentReference resource provides metadata about the document so that the document can be discovered and managed. The actual content may be inline base64 encoded data or provided by direct reference.",
+          "parameters": {
+            "type": {
+              "example": "11490-0",
+              "description": "Filter DocumentReference resources by type (LOINC codes for document types).",
+              "values": {
+                "100018-1": {
+                  "display": "Hospice care Note",
+                  "description": "Note documenting hospice care services."
+                },
+                "100214-6": {
+                  "display": "Dental model prior authorization Document",
+                  "description": "Document requesting prior authorization for dental model services."
+                },
+                "100215-3": {
+                  "display": "Episode of care medical records Document Transplant surgery",
+                  "description": "Document containing medical records for an episode of care related to transplant surgery."
+                },
+                "11485-0": {
+                  "display": "Anesthesia records",
+                  "description": "Records related to anesthesia administration during a procedure."
+                },
+                "11486-8": {
+                  "display": "Chemotherapy records",
+                  "description": "Records documenting chemotherapy treatments."
+                },
+                "11488-4": {
+                  "display": "Consult note",
+                  "description": "Note documenting a consultation from another provider."
+                },
+                "11490-0": {
+                  "display": "Physician Discharge summary",
+                  "description": "Summary of a patient's hospital stay, prepared by a physician at discharge."
+                },
+                "11492-6": {
+                  "display": "Provider-unspecifed, History and physical note",
+                  "description": "A general history and physical examination note; author not specified."
+                },
+                "11502-2": {
+                  "display": "Laboratory report",
+                  "description": "Report of laboratory test results."
+                },
+                "11504-8": {
+                  "display": "Surgical operation note",
+                  "description": "Note documenting the details of a surgical operation."
+                },
+                "11506-3": {
+                  "display": "Progress note",
+                  "description": "A general note documenting the patient's progress over time."
+                },
+                "15507-7": {
+                  "display": "Emergency department Progress note",
+                  "description": "Progress note created during an emergency department visit."
+                },
+                "18743-5": {
+                  "display": "Autopsy report",
+                  "description": "A report detailing the findings of an autopsy."
+                },
+                "18841-7": {
+                  "display": "Hospital consultations Document",
+                  "description": "Document containing records of consultations within the hospital."
+                },
+                "18842-5": {
+                  "display": "Discharge summary",
+                  "description": "A general discharge summary document."
+                },
+                "11523-8": {
+                  "display": "EEG study",
+                  "description": "EEG study document"
+                },
+                "11524-6": {
+                  "display": "EKG study",
+                  "description": "EKG study document"
+                },
+                "24725-4": {
+                  "display": "CT Head",
+                  "description": "CT Head report"
+                },
+                "11525-3": {
+                  "display": "US for pregnancy",
+                  "description": "Ultrasound for pregnancy"
+                },
+                "11527-9": {
+                  "display": "Psychiatry study",
+                  "description": "Psychiatry study"
+                },
+                "11529-5": {
+                  "display": "Surgical pathology study",
+                  "description": "Surgical pathology study report"
+                },
+                "18746-8": {
+                  "display": "Colonoscopy study",
+                  "description": "Colonoscopy study"
+                },
+                "18748-4": {
+                  "display": "Diagnostic imaging study",
+                  "description": "Diagnostic imaging study"
+                },
+                "100698-0": {
+                  "display": "Social Determinants of Health screening report Document",
+                  "description": "social determinant of health report"
+                },
+                "100967-9": {
+                  "display": "Fetal Document Fetal Heart Tracing",
+                  "description": "Fetal Document Fetal Heart Tracing"
+                },
+                "100730-1": {
+                  "display": "Transplant surgery Discharge summary",
+                  "description": "Transplant surgery Discharge summary"
+                },
+                "100697-2": {
+                  "display": "Interventional radiology Outpatient Note",
+                  "description": "Interventional radiology Outpatient Note"
+                },
+                "100661-8": {
+                  "display": "Psychiatry Outpatient Progress note",
+                  "description": "Psychiatry Outpatient Progress note"
+                },
+                "100440-7": {
+                  "display": "Allergy Outpatient Progress note",
+                  "description": "Allergy Outpatient Progress note"
+                },
+                "100504-0": {
+                  "display": "Palliative care Outpatient Progress note",
+                  "description": "Palliative care Outpatient Progress note"
+                },
+                "24993-8": {
+                  "display": "Deprecated X-ray",
+                  "description": "Deprecated X-ray"
+                }
+              }
+            },
+            "date": {
+              "example": "2024-02-01",
+              "description": "Composition editing time"
+            },
+            "status": {
+              "example": "final",
+              "description": "Filter Composition resources by status.",
+              "values": {
+                "registered": {
+                  "display": "Registered",
+                  "description": "The existence of the composition is registered, but there is nothing yet available."
+                },
+                "partial": {
+                  "display": "Partial",
+                  "description": "This is a partial (e.g., initial, interim, or preliminary) composition; data may be incomplete or unverified."
+                },
+                "preliminary": {
+                  "display": "Preliminary",
+                  "description": "Verified early results are available, but not all results are final."
+                },
+                "final": {
+                  "display": "Final",
+                  "description": "This version of the composition is complete, verified, and no further work is planned. Subsequent updates create a new version."
+                },
+                "amended": {
+                  "display": "Amended",
+                  "description": "The content or referenced resources have been modified (edited or added to) after being released as 'final'."
+                },
+                "corrected": {
+                  "display": "Corrected",
+                  "description": "Subsequent to being final, the content has been modified to correct an error."
+                },
+                "appended": {
+                  "display": "Appended",
+                  "description": "Subsequent to being final, new content has been added. The existing content is unchanged."
+                },
+                "cancelled": {
+                  "display": "Cancelled",
+                  "description": "The composition is unavailable because the creation was not started or not completed (also sometimes called 'aborted')."
+                },
+                "entered-in-error": {
+                  "display": "Entered in Error",
+                  "description": "The composition was created in error, and this amendment marks that the series should not be considered valid."
+                },
+                "deprecated": {
+                  "display": "Deprecated",
+                  "description": "This composition has been withdrawn or superseded and should no longer be used."
+                },
+                "unknown": {
+                  "display": "Unknown",
+                  "description": "The authoring system does not know which of the status values applies. *Not* to be used for 'other' - one of the listed statuses applies."
+                }
+              }
+            }
+          }
+        },
+        "Task": {
+          "description": "A task to be performed.",
+          "parameters": {
+            "status": {
+              "required": true,
+              "example": "in-progress",
+              "description": "Filter Task resources by status.",
+              "values": {
+                "draft": {
+                  "display": "Draft",
+                  "description": "The task is not yet ready."
+                },
+                "requested": {
+                  "display": "Requested",
+                  "description": "The task has been placed."
+                },
+                "received": {
+                  "display": "Received",
+                  "description": "The task has been received."
+                },
+                "accepted": {
+                  "display": "Accepted",
+                  "description": "The task has been accepted."
+                },
+                "rejected": {
+                  "display": "Rejected",
+                  "description": "The task has been rejected."
+                },
+                "ready": {
+                  "display": "Ready",
+                  "description": "The task is ready to start."
+                },
+                "in-progress": {
+                  "display": "In Progress",
+                  "description": "The task is in progress."
+                },
+                "on-hold": {
+                  "display": "On Hold",
+                  "description": "The task is temporarily on hold."
+                },
+                "failed": {
+                  "display": "Failed",
+                  "description": "The task failed."
+                },
+                "completed": {
+                  "display": "Completed",
+                  "description": "The task has been completed."
+                },
+                "cancelled": {
+                  "display": "Cancelled",
+                  "description": "The task has been cancelled."
+                },
+                "entered-in-error": {
+                  "display": "Entered in Error",
+                  "description": "The task was entered in error."
+                }
+              }
+            },
+            "intent": {
+              "description": "The intent of the Task resource.",
+              "values": {
+                "unknown": {
+                  "code": "unknown",
+                  "display": "Unknown",
+                  "description": "The intent is not known."
+                },
+                "instance": {
+                  "code": "instance",
+                  "display": "Instance",
+                  "description": "A particular instance of a more general plan definition."
+                },
+                "option": {
+                  "code": "option",
+                  "display": "Option",
+                  "description": "The request represents a component or option for a RequestOrchestration that establishes timing, conditionality and/or other constraints among a set of requests. Refer to [[[RequestOrchestration]]] for additional information on how this intent is used."
+                },
+                "order": {
+                  "code": "order",
+                  "display": "Order",
+                  "description": "The request represents a request/demand and authorization for action."
+                },
+                "plan": {
+                  "code": "plan",
+                  "display": "Plan",
+                  "description": "The request represents an intention to ensure something occurs without providing an authorization for others to act."
+                },
+                "proposal": {
+                  "code": "proposal",
+                  "display": "Proposal",
+                  "description": "The request is a suggestion made by someone/something that doesn't have an intention to ensure it occurs and without providing an authorization to act."
+                }
+              }
+            },
+            "priority": {
+              "description": "The priority of the resource.",
+              "values": {
+                "routine": {
+                  "code": "routine",
+                  "display": "Routine",
+                  "description": "The request has normal priority."
+                },
+                "urgent": {
+                  "code": "urgent",
+                  "display": "Urgent",
+                  "description": "The request should be actioned promptly - higher priority than routine."
+                },
+                "asap": {
+                  "code": "asap",
+                  "display": "ASAP",
+                  "description": "The request should be actioned as soon as possible - higher priority than urgent."
+                },
+                "stat": {
+                  "code": "stat",
+                  "display": "STAT",
+                  "description": "The request should be actioned immediately - highest possible priority. E.g., an emergency"
+                }
+              }
+            },
+            "code": {
+              "required": false,
+              "example": "103697008",
+              "description": "Filter Tasks by the specified code (SNOMED CT).",
+              "values": {
+                "103697008": {
+                  "display": "Patient referral for dental care (procedure)",
+                  "description": "Referral of a patient for dental services."
+                },
+                "306266003": {
+                  "display": "Referral to dietitian",
+                  "description": "Request to refer patient to dietitian."
+                },
+                "116297003": {
+                  "display": "Referral to occupational therapy service",
+                  "description": "Request to refer patient to occupational therapy service."
+                },
+                "451441005": {
+                  "display": "Referral to social worker",
+                  "description": "Request to refer patient to social worker"
+                },
+                "185349003": {
+                  "display": "Encounter for check-up (procedure)",
+                  "description": "A routine encounter for general health assessment."
+                },
+                "39091002": {
+                  "display": "Apply clean technique (procedure)",
+                  "description": "application of the clean techinque"
+                },
+                "425224005": {
+                  "display": "Patient education (procedure)",
+                  "description": "Educate patient"
+                }
+              },
+              "example": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "103697008",
+                    "display": "Patient referral for dental care (procedure)"
+                  }
+                ],
+                "text": "Patient referral for dental care"
+              }
+            },
+            "for": {
+              "required": false,
+              "description": "reference for wehich task is creater.",
+              "example": {
+                "reference": "Patient/123"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

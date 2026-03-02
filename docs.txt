@@ -1,0 +1,18 @@
+sample patient "url": "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/eYg3-1aJmCMq-umIIq2Njxw3"
+sample patient list => url: `https://app.meldrx.com/api/fhir/3e862df3-b1eb-4ff7-9bd8-ef40b7a51bbf/Patient?given=jason&family=argonaut&birthdate=1985-08-01`,
+
+ID PATIENT
+eD.LxhDyX35TntF77l7etUA3
+evYS76EX6LLeCX2PlRLhvwg3
+
+PRACTITIONER
+Practitioner/ef9TegF2nfECi-0Skirbvpg3
+Practitioner/eLTeNNYBPkgTp7S2U88fcnVE2AzH0LfR0JEYTKSygTS43
+
+ORGANIZATION
+Organization/enRyWnSP963FYDpoks4NHOA3
+
+AllergyIntolerance
+AllergyIntolerance/eKBmfMwuEm0T9JiHLTRxf3Q3
+
+Location/e2z032KE5XnuCAgr9ImSZ0Q3
