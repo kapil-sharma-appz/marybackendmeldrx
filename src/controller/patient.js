@@ -5,10 +5,13 @@ const helper = require('../helper/helper');
 
 patient.getPatientList = async (req, res) => {
     try {
-        const { token, given, family, birthdate,gender,name } = req.query;
+        console.log('[API CALLED] GET /Patient – getPatientList', req.query);
+        const { given, family, birthdate, gender, name } = req.query;
+        const authHeader = req.headers['authorization'] || '';
+        const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
         if (!token) {
-            return res.status(400).send(helper.response(400, 'error', 'Token is required.'));
+            return res.status(401).send(helper.response(401, 'error', 'Authorization token is required (Bearer).'));
         }
         // if (!given) {
         //     return res.status(400).send(helper.response(400, 'error', 'Given name is required.'));
@@ -50,7 +53,7 @@ patient.getPatientList = async (req, res) => {
         console.error("Error fetching patient list:", err.message);
         if (err.status === 403) {
             return res.status(403).send(helper.response(403, 'error', 'Forbidden: You do not have permission to access this resource.'));
-        }    
+        }
         return res.status(500).send(helper.response(500, 'error', err.message));
     }
 };
@@ -58,21 +61,24 @@ patient.getPatientList = async (req, res) => {
 
 patient.getPatient = async (req, res) => {
     try {
-        const { token } = req.query;
+        console.log('[API CALLED] GET /Patient/:patient_id – getPatient', { patient_id: req.params.patient_id });
         const { patient_id } = req.params;
+        const authHeader = req.headers['authorization'] || '';
+        const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+        console.log('backend called');
         if (!token) {
-            return res.status(400).send(helper.response(400, 'error', 'Token is required.'));
+            return res.status(401).send(helper.response(401, 'error', 'Authorization token is required (Bearer).'));
         }
         if (!patient_id) {
             return res.status(400).send(helper.response(400, 'error', 'Patient Id is required.'));
         }
-        
+
         const config = {
             method: 'GET',
             maxBodyLength: Infinity,
             url: `${process.env.MELDRX_WS_URL}/Patient/${patient_id}`,
-            headers: { 
-                'Authorization': `Bearer ${token}`,  
+            headers: {
+                'Authorization': `Bearer ${token}`,
             }
         };
 
@@ -87,12 +93,14 @@ patient.getPatient = async (req, res) => {
 
 patient.getResourceDetails = async (req, res) => {
     try {
-        const { token,patient,parameters } = req.query;
-        const { id,resourceType } = req.params;
+        console.log('[API CALLED] GET /:resourceType/:id? – getResourceDetails', { ...req.params, ...req.query });
+        const { patient, parameters } = req.query;
+        const { id, resourceType } = req.params;
+        const authHeader = req.headers['authorization'] || '';
+        const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
         if (!token) {
-            return res.status(400).send(helper.response(400, 'error', 'Token is required.'));
-        
+            return res.status(401).send(helper.response(401, 'error', 'Authorization token is required (Bearer).'));
         }
         if (!resourceType) {
             return res.status(400).send(helper.response(400, 'error', 'Resource Type is required.'));
@@ -110,10 +118,10 @@ patient.getResourceDetails = async (req, res) => {
         if (id) {
             url += `/${id}`;
         }
-    
+
         const queryParams = new URLSearchParams();
         queryParams.append("_count", "500");
-    
+
         if (patient && !id) {
             queryParams.append("patient", patient);
         }
@@ -123,19 +131,19 @@ patient.getResourceDetails = async (req, res) => {
                 queryParams.append(key, value);
             });
         }
-    
+
         if (queryParams.toString()) {
             url += `?${queryParams.toString()}`;
         }
-    
+
         console.log("Final URL:", url);
-    
+
         const config = {
             method: 'GET',
             maxBodyLength: Infinity,
             url: url,
-            headers: { 
-                'Authorization': `Bearer ${token}`,  
+            headers: {
+                'Authorization': `Bearer ${token}`,
             }
         };
 
@@ -150,14 +158,14 @@ patient.getResourceDetails = async (req, res) => {
 
 patient.addPatientResource = async (req, res) => {
     try {
-        const { token } = req.query;
+        console.log('[API CALLED] POST /:resourceType – addPatientResource', { resourceType: req.params.resourceType });
         const { resourceType } = req.params;
-      
         const { requestBody } = req.body;
+        const authHeader = req.headers['authorization'] || '';
+        const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
         if (!token) {
-            return res.status(400).send(helper.response(400, 'error', 'Token is required.'));
-        
+            return res.status(401).send(helper.response(401, 'error', 'Authorization token is required (Bearer).'));
         }
         if (!resourceType) {
             return res.status(400).send(helper.response(400, 'error', 'Resource Type is required.'));
@@ -173,8 +181,8 @@ patient.addPatientResource = async (req, res) => {
             method: 'POST',
             maxBodyLength: Infinity,
             url: url,
-            headers: { 
-                'Authorization': `Bearer ${token}`,  
+            headers: {
+                'Authorization': `Bearer ${token}`,
             },
             data: requestBody,
         };
@@ -185,7 +193,7 @@ patient.addPatientResource = async (req, res) => {
     } catch (err) {
         console.log(err.response.data.errors)
         console.error("Error adding data:", err.message);
-        return res.status(500).send(helper.response(500, 'error', {message:err.message,error:err.response?.data?.errors}));
+        return res.status(500).send(helper.response(500, 'error', { message: err.message, error: err.response?.data?.errors }));
     }
 };
 
