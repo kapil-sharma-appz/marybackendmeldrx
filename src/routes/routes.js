@@ -4,6 +4,10 @@ const workspaceRoute = require('./workspace');
 const patientController = require('../controller/patient');
 
 
+router.get('/healthcheck', (req, res) => {
+    res.status(200).send('it works');
+});
+
 router.use('/Patient', patientRoute);
 router.use('/workspace', workspaceRoute);
 
