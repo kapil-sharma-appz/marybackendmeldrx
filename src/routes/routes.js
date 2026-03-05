@@ -5,7 +5,7 @@ const patientController = require('../controller/patient');
 
 
 router.get('/healthcheck', (req, res) => {
-    console.log(1111111111111111111,'healthcheckhit')
+    console.log('healthcheckhit')
     res.status(200).send('it works');
 });
 
