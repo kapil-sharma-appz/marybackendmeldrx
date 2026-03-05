@@ -16,3 +16,8 @@ AllergyIntolerance
 AllergyIntolerance/eKBmfMwuEm0T9JiHLTRxf3Q3
 
 Location/e2z032KE5XnuCAgr9ImSZ0Q3
+
+
+patient name is Aleisha Treutel born on 13 feb 2006 ->> 2/13/2006
+patient name is Elsa Chapa born on 20 feb 1987 ->> 1987-02-20
+patient name is Carolina Otero born on 13 jan 1977 ->> 1977-01-13
