@@ -9,8 +9,8 @@ var cors = require("cors");
 // const CODE_VERIFIER = crypto.randomBytes(32).toString("base64url");
 
 const app = express();
-app.use(express.json()); 
-app.use(cors()); 
+app.use(express.json());
+app.use(cors());
 
 app.use(function (req, res, next) {
     //Enabling CORS
@@ -39,9 +39,9 @@ app.use(function (req, res, next) {
 // 			});
 // 			const authUrl = `${process.env.MELDRX_BASE_URL}connect/authorize?${authParams}`;
 // 			// const response =res.redirect(authUrl);
-			
+
 // 			return res.status(200).send(helper.response(200, 'success', {authUrl,CODE_VERIFIER,clientID: process.env.CLIENT_ID,meldrxUrl:process.env.MELDRX_BASE_URL}));
-	
+
 // 		} catch (err) {
 // 			console.error("Error fetching auth list:", err.message);
 // 			return res.status(500).send(helper.response(500, 'error', err.message));
@@ -50,11 +50,11 @@ app.use(function (req, res, next) {
 
 // app.get("/callback", async (req, res) => {
 // 	const { code } = req.query;
-	  
+
 // 		if (!code) {
 // 		  return res.status(400).json(helper.response(400, "error", "Authorization code missing"));
 // 		}
-	  
+
 // 		try {
 // 		  const tokenResponse = await axios.post(
 // 			process.env.MELDRX_BASE_URL+"connect/token",
@@ -72,7 +72,7 @@ app.use(function (req, res, next) {
 // 			}
 // 		  );
 // 		  return res.status(200).send(helper.response(200, 'success', {access_token:tokenResponse.data.access_token,patient:tokenResponse.data.patient}));
-	  
+
 // 		} catch (error) {
 // 		  console.log(error);
 // 		  console.error("Error fetching token:", error.response?.data || error.message);
@@ -80,8 +80,12 @@ app.use(function (req, res, next) {
 // 		}
 // });
 
+app.get('/api', (req, res) => {
+    res.status(200).json({ message: 'Welcome to the Mary API! Tejvir Bhai' });
+});
+
 app.use('/api', require('./routes/routes'));
 
 app.listen(3000, () => {
-	console.log('Server started on http://localhost:3000');
+    console.log('Server started on http://localhost:3000');
 })
