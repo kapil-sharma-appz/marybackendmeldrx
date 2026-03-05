@@ -198,4 +198,43 @@ patient.addPatientResource = async (req, res) => {
 };
 
 
+patient.getPatientByToken = async (req, res) => {
+    try {
+        console.log('[API CALLED] GET /api/patient – getPatientByToken', req.query);
+        const { token } = req.query;
+
+        if (!token) {
+            return res.status(400).send(helper.response(400, 'error', 'Query param `token` is required.'));
+        }
+
+        // Use the token to fetch the Patient list from the FHIR workspace
+        const url = `${process.env.MELDRX_WS_URL}/Patient`;
+
+        const config = {
+            method: 'GET',
+            maxBodyLength: Infinity,
+            url: url,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        };
+
+        const response = await axios(config);
+        const bundle = response.data;
+
+        // Return the full bundle or just the first patient entry
+        const patients = bundle?.entry?.map(e => e.resource) || [];
+
+        return res.status(200).send(helper.response(200, 'success', { patients, total: bundle?.total ?? patients.length }));
+
+    } catch (err) {
+        console.error('Error in getPatientByToken:', err.message);
+        if (err.response?.status === 401 || err.response?.status === 403) {
+            return res.status(err.response.status).send(helper.response(err.response.status, 'error', 'Invalid or expired token.'));
+        }
+        return res.status(500).send(helper.response(500, 'error', err.message));
+    }
+};
+
+
 module.exports = patient
