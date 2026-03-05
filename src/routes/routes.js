@@ -9,7 +9,7 @@ router.get('/healthcheck', (req, res) => {
     res.status(200).send('it works');
 });
 
-router.get('/patient', patientController.getPatientByToken);
+router.get('/react-patient/patient', patientController.getPatientByToken);
 router.use('/Patient', patientRoute);
 router.use('/workspace', workspaceRoute);
 
