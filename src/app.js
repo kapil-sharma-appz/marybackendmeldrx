@@ -80,7 +80,7 @@ app.use(function (req, res, next) {
 // 		}
 // });
 
-app.use('/', require('./routes/routes'));
+app.use('/api', require('./routes/routes'));
 
 app.listen(3000, () => {
 	console.log('Server started on http://localhost:3000');
