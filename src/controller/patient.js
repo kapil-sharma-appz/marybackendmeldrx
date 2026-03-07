@@ -46,7 +46,7 @@ patient.getPatientList = async (req, res) => {
         };
 
         const response = await axios(config);
-
+        console.log(response.data)
         return res.status(200).send(helper.response(200, 'success', response.data));
 
     } catch (err) {
@@ -148,6 +148,7 @@ patient.getResourceDetails = async (req, res) => {
         };
 
         const response = await axios(config);
+        console.log(response.data)
         return res.status(200).send(helper.response(200, 'success', response.data));
 
     } catch (err) {
@@ -160,7 +161,8 @@ patient.addPatientResource = async (req, res) => {
     try {
         console.log('[API CALLED] POST /:resourceType – addPatientResource', { resourceType: req.params.resourceType });
         const { resourceType } = req.params;
-        const { requestBody } = req.body;
+        const { requestBody: wrappedBody } = req.body;
+        const requestBody = wrappedBody || req.body;
         const authHeader = req.headers['authorization'] || '';
         const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
@@ -186,12 +188,16 @@ patient.addPatientResource = async (req, res) => {
             },
             data: requestBody,
         };
-
+        console.log(config)
         const response = await axios(config);
+        console.log(11111111111,response)
         return res.status(200).send(helper.response(200, 'success', response.data));
 
     } catch (err) {
-        console.log(err.response.data.errors)
+        console.log(err)
+
+        console.log("FHIR ERROR:", JSON.stringify(err.response?.data, null, 2));
+
         console.error("Error adding data:", err.message);
         return res.status(500).send(helper.response(500, 'error', { message: err.message, error: err.response?.data?.errors }));
     }
@@ -224,7 +230,7 @@ patient.getPatientByToken = async (req, res) => {
 
         // Return the full bundle or just the first patient entry
         const patients = bundle?.entry?.map(e => e.resource) || [];
-
+        console.log(patients)
         return res.status(200).send(helper.response(200, 'success', { patients, total: bundle?.total ?? patients.length }));
 
     } catch (err) {
