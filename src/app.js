@@ -1,9 +1,9 @@
 require('dotenv').config()
 const express = require('express');
-// var axios = require('axios');
-// const querystring = require("querystring");
+var axios = require('axios');
+const querystring = require("querystring");
 // const crypto = require("crypto");
-// const helper = require('../src/helper/helper');
+const helper = require('./helper/helper');
 var cors = require("cors");
 
 // const CODE_VERIFIER = crypto.randomBytes(32).toString("base64url");
@@ -80,8 +80,37 @@ app.use(function (req, res, next) {
 // 		}
 // });
 
+app.post("/api/refresh-token", async (req, res) => {
+	const { refresh_token } = req.body;
+
+	if (!refresh_token) {
+	  return res.status(400).json(helper.response(400, "error", "Refresh token missing"));
+	}
+
+	try {
+	  const tokenResponse = await axios.post(
+		process.env.MELDRX_BASE_URL+"connect/token",
+		querystring.stringify({
+		  client_id: process.env.CLIENT_ID,
+		  grant_type: "refresh_token",
+		  refresh_token: refresh_token,
+		}),
+		{
+		  headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		  },
+		}
+	  );
+	  return res.status(200).send(helper.response(200, 'success', tokenResponse.data));
+
+	} catch (error) {
+	  console.error("Error refreshing token:", error.response?.data || error.message);
+	  return res.status(500).json(helper.response(500, "error", "Token refresh failed"));
+	}
+});
+
 app.get('/api', (req, res) => {
-    res.status(200).json({ message: 'Welcome to the Mary API! Tejvir Bhai' });
+    res.status(200).json({ message: 'Welcome to the Mary API!' });
 });
 
 app.use('/api', require('./routes/routes'));
